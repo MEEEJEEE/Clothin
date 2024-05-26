@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 public class ClothingDetailPage extends JPanel {
     private final MainApp mainApp;
     private JLabel nameLabel, colorLabel, seasonLabel, styleLabel, laundryLabel, categoryLabel;
+    private JButton nextButton;
 
     // MainApp 인스턴스와 Clothing 객체를 받는 생성자 추가
     public ClothingDetailPage(MainApp mainApp, Clothing clothing) {
@@ -18,7 +19,7 @@ public class ClothingDetailPage extends JPanel {
     }
 
     private void setupUI(Clothing clothing) {
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout()); // BorderLayout 사용
          
         // 상세 정보를 보여주는 레이블들 초기화 및 설정
         nameLabel = new JLabel("Name: " + clothing.getName());
@@ -29,13 +30,20 @@ public class ClothingDetailPage extends JPanel {
         categoryLabel = new JLabel("Category: " + clothing.getCategory());
 
         // 정보 패널 구성
-        JPanel infoPanel = new JPanel(new GridLayout(6, 1, 5, 5));
+        JPanel infoPanel = new JPanel(new GridLayout(2,2));
         infoPanel.add(nameLabel);
         infoPanel.add(colorLabel);
         infoPanel.add(seasonLabel);
         infoPanel.add(styleLabel);
         infoPanel.add(laundryLabel);
         infoPanel.add(categoryLabel);
+
+        add(infoPanel, BorderLayout.CENTER);
+
+        // 다음 옷 보기 버튼
+        nextButton = new JButton("다음 옷 보기");
+        nextButton.addActionListener(e -> mainApp.showNextClothingDetail());
+        add(nextButton, BorderLayout.SOUTH);
 
         //메인 화면으로 돌아가는 버튼
         JButton backButton = new JButton("Back to Main");

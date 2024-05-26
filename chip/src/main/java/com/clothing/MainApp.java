@@ -1,17 +1,26 @@
 package com.clothing;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 public class MainApp extends JFrame {
     private CardLayout cardLayout = new CardLayout();
+    private JList<Clothing> clothingList;
+    private DefaultListModel<Clothing> clothingListModel;
     private JPanel mainPanel = new JPanel(cardLayout);
     private ArrayList<Clothing> allClothings = new ArrayList<>();
+    private int currentClothingIndex = 0; // 현재 보여주고 있는 옷의 인덱스
     private User currentUser;
     private DatabaseManager databaseManager = new DatabaseManager();
 
@@ -25,6 +34,13 @@ public class MainApp extends JFrame {
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setupClothingList();
+        getContentPane().add(new JScrollPane(clothingList), BorderLayout.CENTER);
+        pack();
+        setVisible(true);
+        JButton nextButton = new JButton("다음 옷 보기");
+        nextButton.addActionListener(e -> showNextClothingDetail());
+        add(nextButton, BorderLayout.SOUTH);
 
         mainPanel.add(new MainPage(this), "MainPage");
         mainPanel.add(new ClosetPage(this), "ClosetPage");
@@ -74,6 +90,23 @@ public class MainApp extends JFrame {
         cardLayout.show(mainPanel, "AddClothingPage");
     }
 
+    public void showNextClothingDetail() {
+        if (currentClothingIndex < allClothings.size() - 1) {
+            currentClothingIndex++;  // 인덱스 증가
+        } else {
+            currentClothingIndex = 0; // 리스트 끝에 도달하면 처음으로
+        }
+        Clothing selectedClothing = allClothings.get(currentClothingIndex);
+        updateClothingDetailPage(selectedClothing);
+    }
+
+    public void updateClothingDetailPage(Clothing clothing) {
+        // 상세 페이지 내용 업데이트 로직
+        ClothingDetailPage detailPage = new ClothingDetailPage(this, clothing);
+        mainPanel.add(detailPage, "ClothingDetailPage");
+        cardLayout.show(mainPanel, "ClothingDetailPage");
+    }
+    
     public void showClothingDetailPage() {
         // 이 메소드는 실제로 선택된 옷의 상세 페이지를 표시해야 함
         Clothing selectedClothing = getSelectedClothing();
@@ -91,8 +124,15 @@ public class MainApp extends JFrame {
     }
 
     private Clothing getSelectedClothing() {
-        // 임시 코드: 실제 구현 필요
-        return allClothings.size() > 0 ? allClothings.get(0) : null;
+        return clothingList.getSelectedValue();
+    }
+    private void setupClothingList() {
+        clothingListModel = new DefaultListModel<>();
+        for (Clothing clothing : allClothings) {
+            clothingListModel.addElement(clothing);
+        }
+        clothingList = new JList<>(clothingListModel);
+        clothingList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     public static void main(String[] args) {
