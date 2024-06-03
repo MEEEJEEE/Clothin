@@ -5,41 +5,44 @@ import java.awt.*;
 
 public class ProfilePage extends JPanel {
     private MainApp mainApp;
+    private String userEmail;
 
     public ProfilePage(MainApp mainApp) {
         this.mainApp = mainApp;
         setupUI();
     }
 
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
     private void setupUI() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
 
-        User user = mainApp.getCurrentUser();
+        JLabel profileLabel = new JLabel("프로필 정보", JLabel.CENTER);
+        profileLabel.setFont(new Font("Serif", Font.BOLD, 20));
 
-        ImageIcon profileImageIcon = new ImageIcon(user.getProfileImagePath());
-        Image profileImage = profileImageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        ImageIcon scaledProfileImageIcon = new ImageIcon(profileImage);
-        JLabel profileImageLabel = new JLabel(scaledProfileImageIcon);
-
-        JTextArea userInfo = new JTextArea(10, 40);
-        userInfo.setText("마이페이지\n\n");
-        userInfo.append("이름: " + user.getName() + "\n");
-        userInfo.append("아이디: " + user.getId() + "\n");
-        userInfo.append("이메일: " + user.getEmail() + "\n");
-
-        userInfo.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(userInfo);
+        JTextArea profileInfo = new JTextArea();
+        profileInfo.setEditable(false);
+        profileInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JButton backButton = new JButton("메인 화면으로 돌아가기");
         backButton.addActionListener(e -> mainApp.showMainPage());
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.add(profileImageLabel, BorderLayout.WEST);
-        infoPanel.add(scrollPane, BorderLayout.CENTER);
-
-        add(infoPanel, BorderLayout.CENTER);
+        add(profileLabel, BorderLayout.NORTH);
+        add(new JScrollPane(profileInfo), BorderLayout.CENTER);
         add(backButton, BorderLayout.SOUTH);
     }
-}
 
-//데이터베이스에서 오류 수정중(윤준영)
+    public void updateProfileInfo() {
+        DatabaseManager dbManager = MainApp.getDatabaseManager();
+        User user = dbManager.getUserByEmail(userEmail);
+
+        StringBuilder userInfo = new StringBuilder();
+        userInfo.append("이름: ").append(user.getName()).append("\n");
+        userInfo.append("이메일: ").append(user.getEmail()).append("\n");
+
+        JTextArea profileInfo = (JTextArea) getComponent(1); // Center component
+        profileInfo.setText(userInfo.toString());
+    }
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+    <html lang="ko">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <style>
+      /* 기존의 CSS 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #F9F0E1;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+      }
+      h1 {
+        margin-top: 0px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-style: italic;
+        font-size: 30px;
+        border-bottom: black 1px solid;
+      }
+      .board-container {
+        position: relative;
+        width: 40%;
+        height: 630px;
+        max-width: 800px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        padding-top: 40px;
+        overflow-y: auto;
+      }
+      .post {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+      }
+      .post:last-child {
+        border-bottom: none;
+      }
+      .post-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .post-content {
+        margin-bottom: 10px;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
+      }
+      .post-category {
+        font-size: 14px;
+        color: #888;
+        margin-left: 10px;
+      }
+      .add-board-icon {
+        position: fixed; /* fixed로 변경하여 스크롤해도 고정되도록 함 */
+        bottom: 70px; /* 화면의 아래쪽에 위치시키기 위해 bottom 속성 사용 */
+        right: calc(30% + 30px);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #8970c9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        color: white;
+        font-size: 24px;
+        line-height: 1;
+      }
+      .add-board-icon img {
+        width: 24px;
+        height: 24px;
+      }
+      .home-button {
+        margin: 10px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: #606060;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .home-button:hover {
+        background-color: #5443a7;
+      }
+    
+    </style>
+    </head>
+    <body>
+    
+    <div class="board-container">
+      <button class="home-button" onclick="window.location.href='2_wardrobe.html'">back</button>
+      <h1>board</h1>
+      <div class="post-title"></div>
+      <div class="write-container">
+        <a href="3.1community_write1.html"><div class="add-board-icon">+</div></a>
+      <!-- 게시글 목록이 여기에 추가 -->
+      </div>
+    </div>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const boardContainer = document.querySelector('.board-container');
+    
+          // 게시판 업데이트 함수 정의
+          function updateBoard() {
+              // 저장된 글 불러오기
+              const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    
+              // 게시판 초기화
+              boardContainer.innerHTML = '<button class="home-button" onclick="window.location.href=\'2_wardrobe.html\'">back</button><h1>board</h1><a href="3.1community_write1.html"><div class="add-board-icon">+</div></a>';
+              // 저장된 글을 게시판에 추가
+              savedPosts.forEach((post, index) => {
+                  const postElement = document.createElement('div');
+                  postElement.classList.add('post');
+                  const firstLine = post.content.split('\n')[0]; // 첫 줄만 가져오기
+                  postElement.innerHTML = `
+                      <div>
+                          <div class="post-title">${post.title}</div>
+                          <div class="post-content">${post.content}</div>
+                      </div>
+                      <div class="post-category">${post.category}</div>
+                  `;
+                  postElement.addEventListener('click', function() {
+                      // 글을 클릭했을 때 상세 페이지로 이동
+                      localStorage.setItem('currentPost', JSON.stringify(post));
+                      window.location.href = '3.1_write1.html';
+                  });
+                  boardContainer.appendChild(postElement);
+              });
+          }
+    
+          // 페이지 로드 시 게시판 업데이트
+          updateBoard();
+      });
+    </script>
+    
+    </body>
+    </html>

@@ -19,7 +19,7 @@ public class ClosetPage extends JPanel {
         clothingCategories.put("상의", new java.util.ArrayList<>());
         clothingCategories.put("하의", new java.util.ArrayList<>());
         clothingCategories.put("외투", new java.util.ArrayList<>());
-        clothingCategories.put("액세서리/모자", new java.util.ArrayList<>());
+        clothingCategories.put("액세서리", new java.util.ArrayList<>());
         setupUI();
     }
 

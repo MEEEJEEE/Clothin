@@ -1,150 +1,206 @@
 package com.clothing;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.util.ArrayList;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
+import static spark.Spark.*;
 import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-public class MainApp extends JFrame {
-    private CardLayout cardLayout = new CardLayout();
-    private JPanel mainPanel = new JPanel(cardLayout);
-    private JList<Clothing> clothingList;
-    private DefaultListModel<Clothing> clothingListModel = new DefaultListModel<>();
-    private JButton nextButton = new JButton("다음 옷 보기");
-    private ArrayList<Clothing> allClothings = new ArrayList<>();
-    private int currentClothingIndex = 0; // 현재 보여주고 있는 옷의 인덱스
+public class MainApp {
+    private static MainApp instance;
+    private DatabaseManager databaseManager;
+    private ClothingRecommendation clothingRecommendation;
     private User currentUser;
-    private DatabaseManager databaseManager = new DatabaseManager();
 
-    public MainApp() {
-        setupUI();
-        pack(); // 적절한 크기 조절
-        setVisible(true);
-        showLoginPage();
+    private MainApp() {
+        databaseManager = new DatabaseManager();
+        clothingRecommendation = new ClothingRecommendation(databaseManager);
     }
 
-    private void setupUI() {
-        setTitle("클로징 Clothing");
-        setSize(new Dimension(1000, 800)); // 초기 창 크기 설정
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        setupClothingList();
-      /*getContentPane().add(new JScrollPane(clothingList), BorderLayout.CENTER);
-        pack();
-        setVisible(true);
-        JButton nextButton = new JButton("다음 옷 보기");
-      */
-        nextButton.setVisible(false);  // 기본적으로 버튼 숨기기
-        nextButton.addActionListener(e -> showNextClothingDetail());
-
-        mainPanel.add(new MainPage(this), "MainPage");
-        mainPanel.add(new ClosetPage(this), "ClosetPage");
-        mainPanel.add(new CoordinationPage(this), "CoordinationPage");
-        mainPanel.add(new LaundryGuidePage(this), "LaundryGuidePage");
-        mainPanel.add(new AddClothingPage(this), "AddClothingPage");
-        mainPanel.add(new ClothingDetailPage(this, new Clothing("Example", "Blue", "Winter", "Formal", "Dry clean only", "Outerwear")), "ClothingDetailPage");
-        mainPanel.add(new MyPage(this), "MyPage");
-        mainPanel.add(new LoginPage(this), "LoginPage");
-
-        add(mainPanel,BorderLayout.CENTER);
-        add(nextButton, BorderLayout.SOUTH);
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public void showLoginPage() {
-        cardLayout.show(mainPanel, "LoginPage");
-    }
-
-    public void showMainPage() {
-        cardLayout.show(mainPanel, "MainPage");
-    }
-
-    public void showClosetPage() {
-        cardLayout.show(mainPanel, "ClosetPage");
-    }
-
-    public void showCoordinationPage() {
-        cardLayout.show(mainPanel, "CoordinationPage");
-    }
-
-    public void showLaundryGuidePage() {
-        cardLayout.show(mainPanel, "LaundryGuidePage");
-    }
-
-    public void showAddClothingPage() {
-        cardLayout.show(mainPanel, "AddClothingPage");
-    }
-
-    public void showNextClothingDetail() {
-        if (currentClothingIndex < allClothings.size() - 1) {
-            currentClothingIndex++;  // 인덱스 증가
-        } else {
-            currentClothingIndex = 0; // 리스트 끝에 도달하면 처음으로
+    public static MainApp getInstance() {
+        if (instance == null) {
+            instance = new MainApp();
         }
-        Clothing selectedClothing = allClothings.get(currentClothingIndex);
-        updateClothingDetailPage(selectedClothing);
+        return instance;
     }
 
-    public void updateClothingDetailPage(Clothing clothing) {
-        // 상세 페이지 내용 업데이트 로직
-        ClothingDetailPage detailPage = new ClothingDetailPage(this, clothing);
-        mainPanel.add(detailPage, "ClothingDetailPage");
-        cardLayout.show(mainPanel, "ClothingDetailPage");
-        nextButton.setVisible(true); // 버튼 보이기
-    }
-    
-    public void showClothingDetailPage() {
-        // 이 메소드는 실제로 선택된 옷의 상세 페이지를 표시해야 함
-        Clothing selectedClothing = getSelectedClothing();
-        if (selectedClothing != null) {
-            nextButton.setVisible(true);  // 버튼을 보이게 설정
-            ClothingDetailPage detailPage = new ClothingDetailPage(this, selectedClothing);
-            mainPanel.add(detailPage, "ClothingDetailPage");
-            cardLayout.show(mainPanel, "ClothingDetailPage");
-        } else {
-            JOptionPane.showMessageDialog(this, "선택된 옷 정보가 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-            nextButton.setVisible(false);  // 버튼을 숨김
-        }
+    public static DatabaseManager getDatabaseManager() {
+        return getInstance().databaseManager;
     }
 
-    public void showMyPage() {
-        cardLayout.show(mainPanel, "MyPage");
+    public static User getCurrentUser() {
+        return getInstance().currentUser;
     }
 
-    private Clothing getSelectedClothing() {
-        return clothingList.getSelectedValue();
-    }
-    private void setupClothingList() {
-        clothingListModel = new DefaultListModel<>();
-        for (Clothing clothing : allClothings) {
-            clothingListModel.addElement(clothing);
-        }
-        clothingList = new JList<>(clothingListModel);
-        clothingList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    public static void setCurrentUser(User user) {
+        getInstance().currentUser = user;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainApp().setVisible(true));
+        port(4567);
+        staticFiles.location("/public");
+
+        // 웹 페이지 경로 설정
+        get("/", (req, res) -> {
+            res.redirect("/1_intro.html");
+            return null;
+        });
+
+        post("/login", (req, res) -> {
+            String email = req.queryParams("email");
+            String password = req.queryParams("password");
+
+            User user = getDatabaseManager().authenticateUser(email, password);
+            if (user != null) {
+                setCurrentUser(user);
+                res.redirect("/3_wardrobe(mainpage).html");
+            } else {
+                res.status(401);
+                return "로그인 실패!";
+            }
+            return null;
+        });
+
+        post("/signup", (req, res) -> {
+            String name = req.queryParams("name");
+            String email = req.queryParams("email");
+            String password = req.queryParams("password");
+
+            getDatabaseManager().addUser(new User(0, name, email, password));
+            res.redirect("/2_login.html");
+            return null;
+        });
+
+        post("/add-clothing", (req, res) -> {
+            String name = req.queryParams("name");
+            String color = req.queryParams("color");
+            String season = req.queryParams("season");
+            String type = req.queryParams("type");
+            String category = req.queryParams("category");
+
+            getDatabaseManager().addClothing(new Clothing(0, name, color, season, type, category));
+            res.redirect("/3_wardrobe(mainpage).html");
+            return null;
+        });
+
+        post("/community", (req, res) -> {
+            String title = req.queryParams("title");
+            String content = req.queryParams("content");
+            String author = req.queryParams("author");
+
+            getDatabaseManager().addPost(new Post(0, title, content, author));
+            res.redirect("/3_community_board.html");
+            return null;
+        });
+
+        // Example usage of clothingRecommendation for weather-based recommendation
+        get("/recommendation", (req, res) -> {
+            String weather = req.queryParams("weather");
+            String occasion = req.queryParams("occasion");
+            Clothing recommendation = getInstance().clothingRecommendation.recommendClothing(weather, occasion);
+            if (recommendation != null) {
+                return "Recommended clothing: " + recommendation.getName() + " (" + recommendation.getCategory() + ")";
+            } else {
+                return "No recommendation available.";
+            }
+        });
+    }
+
+    public void showMainPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Main Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new MainPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showClosetPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Closet Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new ClosetPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showAddClothingPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Add Clothing Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new AddClothingPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showClothingDetailPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Clothing Detail Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new ClothingDetailPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showCoordinationPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Coordination Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new CoordinationPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showLaundryGuidePage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Laundry Guide Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new LaundryGuidePage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showMyPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("My Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new MyPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showProfilePage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Profile Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new ProfilePage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showCommunityPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Community Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new CommunityPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    public void showLoginPage() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Login Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new LoginPage(this));
+            frame.pack();
+            frame.setVisible(true);
+        });
     }
 }

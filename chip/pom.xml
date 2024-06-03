@@ -7,7 +7,7 @@
   <version>2.1.210</version>
 
   <name>chip</name>
-  <url>http://www.example.com</url>
+  <url>http://www.clothing.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,6 +26,11 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>2.9.3</version>
     </dependency>
   </dependencies>
 

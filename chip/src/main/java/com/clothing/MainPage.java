@@ -1,11 +1,7 @@
 package com.clothing;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class MainPage extends JPanel {
     private MainApp mainApp;
@@ -30,11 +26,19 @@ public class MainPage extends JPanel {
         JButton myPageButton = new JButton("My Page");
         myPageButton.addActionListener(e -> mainApp.showMyPage());
 
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JButton profileButton = new JButton("Profile");
+        profileButton.addActionListener(e -> mainApp.showProfilePage());
+
+        JButton communityButton = new JButton("Community");
+        communityButton.addActionListener(e -> mainApp.showCommunityPage());
+
+        JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 10, 10));
         buttonPanel.add(closetButton);
         buttonPanel.add(coordinationButton);
         buttonPanel.add(laundryGuideButton);
         buttonPanel.add(myPageButton);
+        buttonPanel.add(profileButton);
+        buttonPanel.add(communityButton);
 
         add(new JLabel("Main Page", JLabel.CENTER), BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
