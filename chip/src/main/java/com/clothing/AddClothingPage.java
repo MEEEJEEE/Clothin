@@ -36,14 +36,24 @@ public class AddClothingPage extends JPanel {
 
         JButton addButton = new JButton("추가");
         addButton.addActionListener(e -> {
-            String name = nameField.getText();
-            String color = colorField.getText();
-            String season = seasonField.getText();
-            String type = typeField.getText();
-            String category = categoryField.getText();
+            String name = nameField.getText().trim();
+            String color = colorField.getText().trim();
+            String season = seasonField.getText().trim();
+            String type = typeField.getText().trim();
+            String category = categoryField.getText().trim();
 
-            MainApp.getDatabaseManager().addClothing(new Clothing(0, name, color, season, type, category));
-            JOptionPane.showMessageDialog(this, "옷이 추가되었습니다!", "추가 완료", JOptionPane.INFORMATION_MESSAGE);
+            // 입력값 검사 추가
+            if (name.isEmpty() || color.isEmpty() || season.isEmpty() || type.isEmpty() || category.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "모든 필드를 채워주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                MainApp.getDatabaseManager().addClothing(new Clothing(0, name, color, season, type, category));
+                JOptionPane.showMessageDialog(this, "옷이 추가되었습니다!", "추가 완료", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "데이터베이스 오류 발생", "오류", JOptionPane.ERROR_MESSAGE);
+            }
             mainApp.showClosetPage();
         });
 

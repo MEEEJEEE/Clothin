@@ -9,6 +9,21 @@ public class DatabaseManager {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
+    // 생성자에서 데이터베이스 초기화 메서드 호출
+    public DatabaseManager() {
+        initializeDatabase();
+    }
+
+    // 데이터베이스 연결 및 테이블 생성을 담당하는 메서드
+    private void initializeDatabase() {
+        try (Connection conn = getConnection();  // try-with-resources를 사용하여 자동으로 리소스를 해제
+             Statement stmt = conn.createStatement()) {
+            createTables(stmt);
+        } catch (SQLException e) {
+            e.printStackTrace();  // 예외 발생시 스택 트레이스 출력
+        }
+    }
+    /* 
     public DatabaseManager() {
         try {
             Connection conn = getConnection();
@@ -39,11 +54,43 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+    */
 
+    // 테이블 생성을 담당하는 메서드
+    private void createTables(Statement stmt) throws SQLException {
+        // 사용자 테이블 생성
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS users (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+            "name VARCHAR(255), " +
+            "email VARCHAR(255), " +
+            "password VARCHAR(255))");
+        
+        // 의류 테이블 생성
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS clothing (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+            "name VARCHAR(255), " +
+            "color VARCHAR(255), " +
+            "season VARCHAR(255), " +
+            "type VARCHAR(255), " +
+            "category VARCHAR(255))");
+
+            // 게시물 테이블 생성
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS posts (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+            "title VARCHAR(255), " +
+            "content TEXT, " +
+            "author VARCHAR(255))");
+    }
+
+    // 데이터베이스 연결을 반환하는 메서드
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    // 사용자 인증 메서드
     public User authenticateUser(String email, String password) {
         try (Connection conn = getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE email = ? AND password = ?");

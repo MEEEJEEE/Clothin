@@ -1,5 +1,8 @@
 package com.clothing;
 
+/*와일드카드(*)를 사용
+import javax.swing.*;
+import java.awt.*; */
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -27,22 +30,23 @@ public class ClothingDetailPage extends JPanel {
         predefinedClothings.add(new Clothing("하의D", "하의"));
         predefinedClothings.add(new Clothing("신발E", "신발"));
         predefinedClothings.add(new Clothing("신발F", "신발"));
-        predefinedClothings.add(new Clothing("액세서리G", "액세서리"));
+        predefinedClothings.add(new Clothing("액세서리Gd", "액세서리"));
         predefinedClothings.add(new Clothing("액세서리H", "액세서리"));
 
+    //UI 설정
     private void setupUI(Clothing clothing) {
         setLayout(new BorderLayout()); // BorderLayout 사용
          
-        // 상세 정보를 보여주는 레이블들 초기화 및 설정
-        nameLabel = new JLabel("Name: " + clothing.getName());
-        colorLabel = new JLabel("Color: " + clothing.getColor());
-        seasonLabel = new JLabel("Season: " + clothing.getSeason());
-        styleLabel = new JLabel("Style: " + clothing.getStyle());
-        laundryLabel = new JLabel("Laundry: " + clothing.getLaundry());
-        categoryLabel = new JLabel("Category: " + clothing.getCategory());
+        nameLabel = new JLabel("Name: " + Optional.ofNullable(clothing.getName()).orElse("정보 없음"));
+        colorLabel = new JLabel("Color: " + Optional.ofNullable(clothing.getColor()).orElse("정보 없음"));
+        seasonLabel = new JLabel("Season: " + Optional.ofNullable(clothing.getSeason()).orElse("정보 없음"));
+        styleLabel = new JLabel("Style: " + Optional.ofNullable(clothing.getStyle()).orElse("정보 없음"));
+        laundryLabel = new JLabel("Laundry: " + Optional.ofNullable(clothing.getLaundry()).orElse("정보 없음"));
+        categoryLabel = new JLabel("Category: " + Optional.ofNullable(clothing.getCategory()).orElse("정보 없음"));
+
 
         // 정보 패널 구성
-        JPanel infoPanel = new JPanel(new GridLayout(6, 1)); // GridLayout 수정
+        JPanel infoPanel = new JPanel(new GridLayout(6, 1));
         infoPanel.add(nameLabel);
         infoPanel.add(colorLabel);
         infoPanel.add(seasonLabel);
@@ -62,7 +66,7 @@ public class ClothingDetailPage extends JPanel {
         JButton backButton = new JButton("Back to Main");
         backButton.addActionListener(e -> mainApp.showMainPage());
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10)); // 버튼 패널 수정
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         buttonPanel.add(backButton);
         buttonPanel.add(nextButton);
 
@@ -70,10 +74,5 @@ public class ClothingDetailPage extends JPanel {
         add(buttonPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Predefined items를 보여주는 메소드 (옵션)
-    public void displayPredefinedItems() {
-        for (Clothing item : predefinedClothings) {
-            this.add(new JLabel(item.getName() + " (" + item.getType() + ")"));
-        }
     }
 }
