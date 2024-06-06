@@ -47,7 +47,6 @@ public class MainApp {
         post("/login", (req, res) -> {
             String email = req.queryParams("email");
             String password = req.queryParams("password");
-
             User user = getDatabaseManager().authenticateUser(email, password);
             if (user != null) {
                 setCurrentUser(user);
@@ -76,7 +75,8 @@ public class MainApp {
             String type = req.queryParams("type");
             String category = req.queryParams("category");
 
-            getDatabaseManager().addClothing(new Clothing(0, name, color, season, type, category));
+            // Clothing 생성자에 imagePath 추가 수정
+            getDatabaseManager().addClothing(new Clothing(0, name, color, season, type, category, "path/to/image"));
             res.redirect("/3_wardrobe(mainpage).html");
             return null;
         });

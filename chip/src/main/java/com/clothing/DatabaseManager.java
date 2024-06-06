@@ -14,16 +14,21 @@ public class DatabaseManager {
         initializeDatabase();
     }
 
-    // 데이터베이스 연결 및 테이블 생성을 담당하는 메서드
     private void initializeDatabase() {
-        try (Connection conn = getConnection();  // try-with-resources를 사용하여 자동으로 리소스를 해제
+        // 데이터베이스 연결 및 테이블 생성
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement()) {
-            createTables(stmt);
+            // 사용자 테이블 생성
+            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255))");
+            // 의류 테이블 생성
+            stmt.execute("CREATE TABLE IF NOT EXISTS clothing (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), color VARCHAR(255), season VARCHAR(255), type VARCHAR(255), category VARCHAR(255), imagePath VARCHAR(255))");
+            // 게시물 테이블 생성
+            stmt.execute("CREATE TABLE IF NOT EXISTS posts (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), content TEXT, author VARCHAR(255))");
         } catch (SQLException e) {
-            e.printStackTrace();  // 예외 발생시 스택 트레이스 출력
+            System.err.println("데이터베이스 초기화 중 오류 발생: " + e.getMessage());
         }
     }
-    /* 
+/* 
     public DatabaseManager() {
         try {
             Connection conn = getConnection();
@@ -54,7 +59,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    */
 
     // 테이블 생성을 담당하는 메서드
     private void createTables(Statement stmt) throws SQLException {
@@ -84,6 +88,7 @@ public class DatabaseManager {
             "content TEXT, " +
             "author VARCHAR(255))");
     }
+*/
 
     // 데이터베이스 연결을 반환하는 메서드
     public Connection getConnection() throws SQLException {
@@ -92,19 +97,18 @@ public class DatabaseManager {
 
     // 사용자 인증 메서드
     public User authenticateUser(String email, String password) {
-        try (Connection conn = getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE email = ? AND password = ?");
+        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, email);
             stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"));
-                rs.close();
-                stmt.close();
-                return user;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"));
+                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("사용자 인증 중 오류 발생: " + e.getMessage());
         }
         return null;
     }
@@ -123,17 +127,18 @@ public class DatabaseManager {
     }
 
     public void addClothing(Clothing clothing) {
-        try (Connection conn = getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(
-                "INSERT INTO clothing (name, color, season, type, category) VALUES (?, ?, ?, ?, ?)");
+        String query = "INSERT INTO clothing (name, color, season, type, category, imagePath) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, clothing.getName());
             stmt.setString(2, clothing.getColor());
             stmt.setString(3, clothing.getSeason());
             stmt.setString(4, clothing.getType());
             stmt.setString(5, clothing.getCategory());
+            stmt.setString(6, clothing.getImagePath());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("의류 항목 추가 중 오류 발생: " + e.getMessage());
         }
     }
 
@@ -190,6 +195,21 @@ public class DatabaseManager {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    // 예외 처리 로직 추가
+    public void addUser(User user) {
+        try (Connection conn = getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPassword());
+            int result = stmt.executeUpdate();
+            if (result == 0) {
+                throw new SQLException("사용자 추가 실패");
+            }
+        } catch (SQLException e) {
+            System.out.println("데이터베이스 오류: " + e.getMessage());
         }
     }
 

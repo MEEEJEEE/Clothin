@@ -21,7 +21,7 @@ public class ClothingDetailPage extends JPanel {
         this.mainApp = mainApp;
         setupUI(clothing);
     }
-
+/* 
     private void initializePredefinedClothings() {
         predefinedClothings = new ArrayList<>();
         predefinedClothings.add(new Clothing("상의A", "상의"));
@@ -32,10 +32,10 @@ public class ClothingDetailPage extends JPanel {
         predefinedClothings.add(new Clothing("신발F", "신발"));
         predefinedClothings.add(new Clothing("액세서리Gd", "액세서리"));
         predefinedClothings.add(new Clothing("액세서리H", "액세서리"));
-
+*/
     //UI 설정
     private void setupUI(Clothing clothing) {
-        setLayout(new BorderLayout()); // BorderLayout 사용
+        setLayout(new BorderLayout()); 
          
         nameLabel = new JLabel("Name: " + Optional.ofNullable(clothing.getName()).orElse("정보 없음"));
         colorLabel = new JLabel("Color: " + Optional.ofNullable(clothing.getColor()).orElse("정보 없음"));
