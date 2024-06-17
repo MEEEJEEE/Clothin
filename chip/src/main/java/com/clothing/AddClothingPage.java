@@ -23,12 +23,11 @@ public class AddClothingPage extends JPanel {
 
         JPanel inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
+
         JTextField nameField = new JTextField();
         JTextField colorField = new JTextField();
         JTextField seasonField = new JTextField();
-        JTextField styleField = new JTextField();
-        JTextField laundryField = new JTextField();
+        JTextField typeField = new JTextField();
         JTextField categoryField = new JTextField();
 
         inputPanel.add(new JLabel("옷 이름:"));
@@ -37,10 +36,8 @@ public class AddClothingPage extends JPanel {
         inputPanel.add(colorField);
         inputPanel.add(new JLabel("계절:"));
         inputPanel.add(seasonField);
-        inputPanel.add(new JLabel("스타일:"));
-        inputPanel.add(styleField);
-        inputPanel.add(new JLabel("세탁 방법:"));
-        inputPanel.add(laundryField);
+        inputPanel.add(new JLabel("종류:"));
+        inputPanel.add(typeField);
         inputPanel.add(new JLabel("카테고리:"));
         inputPanel.add(categoryField);
 
@@ -49,12 +46,10 @@ public class AddClothingPage extends JPanel {
             String name = nameField.getText();
             String color = colorField.getText();
             String season = seasonField.getText();
-            String style = styleField.getText();
-            String laundry = laundryField.getText();
+            String type = typeField.getText();
             String category = categoryField.getText();
 
-            // 옷 데이터베이스에 추가
-            mainApp.getDatabaseManager().addClothing(new Clothing(name, color, season, style, laundry, category));
+            MainApp.getDatabaseManager().addClothing(new Clothing(0, name, color, season, type, category));
             JOptionPane.showMessageDialog(this, "옷이 추가되었습니다!", "추가 완료", JOptionPane.INFORMATION_MESSAGE);
             mainApp.showClosetPage();
         });
@@ -71,6 +66,4 @@ public class AddClothingPage extends JPanel {
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
     }
-
-
 }

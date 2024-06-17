@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Introduction</title>
+    <style>
+        body {
+            background-color: #F9F0E1;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #screen {
+            background-color: #F9F0E1;
+            border-radius: 5%;
+            width: 400px;
+            height: 700px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 400px;
+            height: auto;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="screen">
+        <header>
+            <img src="img/clothing_logo.png" id="logo" onclick="navigateToLogin()">
+        </header>
+    </div>
+
+    <script>
+        function navigateToLogin() {
+            window.location.href = '2_login.html';
+        }
+    </script>
+</body>
+</html>

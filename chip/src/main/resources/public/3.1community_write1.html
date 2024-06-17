@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Board</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #F9F0E1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+  .post-container {
+    width: 60%;
+    height: 635px;
+    max-width: 800px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  .post-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px;
+  }
+  .post-content {
+    margin: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    height: 480px;
+    border: #9e9e9e 1px solid;
+    padding: 10px;
+    overflow-y: auto;
+    white-space: pre-line;
+  }
+  .edit-title{
+    width: calc(100% - 40px);
+    margin: 10px;
+    font-size: 16px;
+    padding: 10px;
+    border: #9e9e9e 1px solid;
+    border-radius: 5px;
+  }
+  .edit-content {
+    width: calc(100% - 40px);
+    height: 480px;
+    margin: 10px;
+    font-size: 16px;
+    padding: 10px;
+    border: #9e9e9e 1px solid;
+    border-radius: 5px;
+  }
+
+  .back-link, .delete-button, .edit-button, .save-button, .cancel-button {
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: inline-block;
+    text-decoration: none;
+    color: #5443a7;
+    border: 1px solid #5443a7;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+  }
+  .back-link:hover, .delete-button:hover, .edit-button:hover, .save-button:hover, .cancel-button:hover {
+    background-color: #5443a7;
+    color: #fff;
+  }
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="post-container">
+  <div class="post-title"></div>
+  <div class="post-content"></div>
+  <input type="text" class="edit-title hidden" />
+  <textarea class="edit-content hidden"></textarea>
+  <div class="button-container">
+    <a href="3_community_board.html" class="back-link">뒤로가기</a>
+    <div class="edit-button">수정</div>
+    <div class="save-button hidden">저장</div>
+    <div class="cancel-button hidden">취소</div>
+    <div class="delete-button">삭제</div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const postTitle = document.querySelector('.post-title');
+      const postContent = document.querySelector('.post-content');
+      const editTitle = document.querySelector('.edit-title');
+      const editContent = document.querySelector('.edit-content');
+      const editButton = document.querySelector('.edit-button');
+      const saveButton = document.querySelector('.save-button');
+      const cancelButton = document.querySelector('.cancel-button');
+      const deleteButton = document.querySelector('.delete-button');
+
+      // 로컬 저장소에서 현재 게시글 데이터 가져오기
+      const currentPost = JSON.parse(localStorage.getItem('currentPost'));
+
+      if (currentPost) {
+          postTitle.textContent = currentPost.title;
+          postContent.textContent = currentPost.content;
+          editTitle.value = currentPost.title;
+          editContent.value = currentPost.content;
+      } else {
+          postTitle.textContent = '게시글을 찾을 수 없습니다.';
+          postContent.textContent = '';
+      }
+
+      // 수정 버튼 클릭 이벤트
+      editButton.addEventListener('click', function() {
+          postTitle.classList.add('hidden');
+          postContent.classList.add('hidden');
+          editTitle.classList.remove('hidden');
+          editContent.classList.remove('hidden');
+          editButton.classList.add('hidden');
+          saveButton.classList.remove('hidden');
+          cancelButton.classList.remove('hidden');
+      });
+
+      // 저장 버튼 클릭 이벤트
+      saveButton.addEventListener('click', function() {
+          const updatedTitle = editTitle.value;
+          const updatedContent = editContent.value;
+
+          // 저장된 게시글 불러오기
+          let savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+
+          // 현재 게시글을 저장된 게시글 목록에서 찾아 업데이트
+          savedPosts = savedPosts.map(post => {
+              if (post.date === currentPost.date) {
+                  return { ...post, title: updatedTitle, content: updatedContent };
+              }
+              return post;
+          });
+
+          // 변경된 게시글 목록을 로컬 저장소에 저장
+          localStorage.setItem('posts', JSON.stringify(savedPosts));
+          localStorage.setItem('currentPost', JSON.stringify({ ...currentPost, title: updatedTitle, content: updatedContent }));
+
+          // 수정 모드 해제 및 내용 업데이트
+          postTitle.textContent = updatedTitle;
+          postContent.textContent = updatedContent;
+          postTitle.classList.remove('hidden');
+          postContent.classList.remove('hidden');
+          editTitle.classList.add('hidden');
+          editContent.classList.add('hidden');
+          editButton.classList.remove('hidden');
+          saveButton.classList.add('hidden');
+          cancelButton.classList.add('hidden');
+      });
+
+      // 취소 버튼 클릭 이벤트
+      cancelButton.addEventListener('click', function() {
+          postTitle.classList.remove('hidden');
+          postContent.classList.remove('hidden');
+          editTitle.classList.add('hidden');
+          editContent.classList.add('hidden');
+          editButton.classList.remove('hidden');
+          saveButton.classList.add('hidden');
+          cancelButton.classList.add('hidden');
+      });
+
+      // 삭제 버튼 클릭 이벤트
+      deleteButton.addEventListener('click', function() {
+          if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+              // 저장된 게시글 불러오기
+              let savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+              
+              // 현재 게시글을 저장된 게시글 목록에서 제거
+              savedPosts = savedPosts.filter(post => post.date !== currentPost.date);
+              
+              // 변경된 게시글 목록을 로컬 저장소에 저장
+              localStorage.setItem('posts', JSON.stringify(savedPosts));
+              
+              // 현재 게시글 삭제
+              localStorage.removeItem('currentPost');
+
+              // 게시글 목록 페이지로 이동
+              window.location.href = '3_community_board.html';
+          }
+      });
+  });
+</script>
+
+</body>
+</html>

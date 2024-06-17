@@ -1,11 +1,7 @@
 package com.clothing;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class CoordinationPage extends JPanel {
     private MainApp mainApp;

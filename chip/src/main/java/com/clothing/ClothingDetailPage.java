@@ -1,51 +1,19 @@
 package com.clothing;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class ClothingDetailPage extends JPanel {
-    private final MainApp mainApp;
-    private JLabel nameLabel, colorLabel, seasonLabel, styleLabel, laundryLabel, categoryLabel;
-    private JButton nextButton;
+    private MainApp mainApp;
 
-    // MainApp 인스턴스와 Clothing 객체를 받는 생성자 추가
-    public ClothingDetailPage(MainApp mainApp, Clothing clothing) {
+    public ClothingDetailPage(MainApp mainApp) {
         this.mainApp = mainApp;
-        setupUI(clothing);
+        setupUI();
     }
 
-    private void setupUI(Clothing clothing) {
-        setLayout(new BorderLayout()); // BorderLayout 사용
-         
-        // 상세 정보를 보여주는 레이블들 초기화 및 설정
-        nameLabel = new JLabel("Name: " + clothing.getName());
-        colorLabel = new JLabel("Color: " + clothing.getColor());
-        seasonLabel = new JLabel("Season: " + clothing.getSeason());
-        styleLabel = new JLabel("Style: " + clothing.getStyle());
-        laundryLabel = new JLabel("Laundry: " + clothing.getLaundry());
-        categoryLabel = new JLabel("Category: " + clothing.getCategory());
+    private void setupUI() {
+        setLayout(new BorderLayout(10, 10));
 
-        // 정보 패널 구성
-        JPanel infoPanel = new JPanel(new GridLayout(2,2));
-        infoPanel.add(nameLabel);
-        infoPanel.add(colorLabel);
-        infoPanel.add(seasonLabel);
-        infoPanel.add(styleLabel);
-        infoPanel.add(laundryLabel);
-        infoPanel.add(categoryLabel);
-
-        add(infoPanel, BorderLayout.CENTER);
-
-        // 다음 옷 보기 버튼
-        nextButton = new JButton("다음 옷 보기");
-        nextButton.addActionListener(e -> mainApp.showNextClothingDetail());
-        add(nextButton, BorderLayout.SOUTH);
-
-        //메인 화면으로 돌아가는 버튼
         JButton backButton = new JButton("Back to Main");
         backButton.addActionListener(e -> mainApp.showMainPage());
 
@@ -54,6 +22,5 @@ public class ClothingDetailPage extends JPanel {
 
         add(new JLabel("Clothing Detail Page", JLabel.CENTER), BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
     }
 }

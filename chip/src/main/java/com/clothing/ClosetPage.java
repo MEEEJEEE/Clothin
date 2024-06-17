@@ -1,16 +1,12 @@
 package com.clothing;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 public class ClosetPage extends JPanel {
-    private final MainApp mainApp;
+    private MainApp mainApp;
     private Map<String, java.util.List<Clothing>> clothingCategories;
 
     public ClosetPage(MainApp mainApp) {

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloth Matching</title>
+    <style>
+        body {
+            background-color: #F9F0E1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .App {
+            text-align: center;
+        }
+
+        .App-header {
+            background-color: #84978f;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(10px + 2vmin);
+            color: white;
+            width: 900px;
+            position: relative;
+        }
+
+        .style-selector {
+            margin-bottom: 20px;
+        }
+
+        .recommendation {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .clothing-item {
+            margin: 10px;
+        }
+
+        .clothing-item img {
+            max-width: 100px;
+            margin: 10px;
+        }
+
+        button {
+            width: 100%;
+            height: 75px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            background-color: #ada692;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .menu-box {
+            background-color: white;
+            width: 70px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ada692;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-left: 20px;
+        }
+
+        .menu-item {
+            width: 100%;
+            height: 75px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            background-color: #ada692;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: #e0e0e0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="root"></div>
+        <div class="menu-box">
+            <div class="menu-item" onclick="location.href='3_wardrobe(mainpage).html'">Home</div>
+            <div class="menu-item" onclick="location.href='clothmatcing.html'">matching</div>
+            <div class="menu-item" onclick="location.href='3_community_board.html'">Board</div>
+            <div class="menu-item" onclick="location.href='4_mypage.html'">MyPage</div>
+            <div class="menu-item" onclick="location.href='6_index.html'">Index</div>
+        </div>
+    </div>
+
+    <!-- React와 ReactDOM 라이브러리를 CDN을 통해 불러옵니다 -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Babel을 사용하여 JSX를 처리하도록 설정합니다 -->
+    <script type="text/babel">
+        // React의 useState 훅을 불러옵니다
+        const { useState } = React;
+
+        // 스타일 종류를 정의합니다
+        const styles = ['Lovely', 'Chic', 'Casual', 'Formal'];
+
+        // 카테고리와 그에 해당하는 이미지 파일명을 정의합니다
+        const categories = {
+            Accessories: 'Accessories.png',
+            Top: 'top.png',
+            Bottoms: 'Bottoms.png',
+            Shoes: 'shoes.png',
+            Other: 'Other.png'
+        };
+
+        // 의류를 매칭하는 컴포넌트를 정의합니다
+        const MatchClothes = () => {
+            const [style, setStyle] = useState(styles[0]);
+            const [matchedClothes, setMatchedClothes] = useState({});
+
+            // 의류 추천을 생성하는 함수입니다
+            const generateRecommendation = () => {
+                const recommendation = {};
+                Object.keys(categories).forEach(category => {
+                    recommendation[category] = `img/${style}-${categories[category]}`;
+                });
+                setMatchedClothes(recommendation);
+            };
+
+            return (
+                <div>
+                    <div className="style-selector">
+                        <label>선호하는 스타일을 선택하세요: </label>
+                        <select value={style} onChange={(e) => setStyle(e.target.value)}>
+                            {styles.map((styleOption) => (
+                                <option key={styleOption} value={styleOption}>{styleOption}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <button onClick={generateRecommendation}>코디 추천</button>
+                    <div className="recommendation">
+                        {Object.keys(matchedClothes).map(category => (
+                            <div key={category} className="clothing-item">
+                                <img src={matchedClothes[category]} alt={`${style} ${category}`} />
+                                <p>{category}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // 메인 앱 컴포넌트를 정의합니다
+        const App = () => {
+            return (
+                <div className="App">
+                    <header className="App-header">
+                        <h1>Fashion Matching Recommendation</h1>
+                        <MatchClothes />
+                    </header>
+                </div>
+            );
+        };
+
+        // ReactDOM을 사용하여 App 컴포넌트를 root 요소에 렌더링합니다
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

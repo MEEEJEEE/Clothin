@@ -22,6 +22,8 @@ public class LoginPage extends JPanel {
 
         inputPanel.add(new JLabel("Email:"));
         inputPanel.add(emailField);
+
+
         inputPanel.add(new JLabel("Password:"));
         inputPanel.add(passwordField);
 
@@ -30,9 +32,9 @@ public class LoginPage extends JPanel {
             String email = emailField.getText();
             String password = new String(passwordField.getPassword());
 
-            User user = mainApp.getDatabaseManager().authenticateUser(email, password);
+            User user = MainApp.getDatabaseManager().authenticateUser(email, password);
             if (user != null) {
-                mainApp.setCurrentUser(user);
+                MainApp.setCurrentUser(user);
                 JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 mainApp.showMainPage();
             } else {

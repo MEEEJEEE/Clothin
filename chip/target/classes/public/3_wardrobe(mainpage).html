@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardrobe</title>
+    <style>
+        body {
+            background-color: #F9F0E1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .menu-header {
+            position: absolute;
+            right: 83px;
+            top: 50px;
+            font-style: italic;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 24px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #screen {
+            position: relative;
+            background-image: linear-gradient(to top, #84978f 0%, #84978f 100%);
+            border: none;
+            border-radius: 0%;
+            width: 800px;
+            height: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .menu-box {
+            position: absolute;
+            right: 60px;
+            top: 160px;
+            background-color: white;
+            width: 200px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ada692;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item {
+            width: 100%;
+            height: 75px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            background-color: #ada692;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .image-container {
+            width: 400px;
+            margin-left: 70px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="screen">
+        <header class="menu-header"> 
+            <h1 style="text-align: center;">clothing</h1>
+        </header>
+
+        <main style="display: flex;">
+            <div id="cloth">
+                <div><img src="img/드레스룸.jpg" class="image-container" alt="Dress Room"></div>     
+            </div>
+            <div class="menu-box">
+                <div class="menu-item" onclick="location.href='3_wardrobe(mainpage).html'">Home</div>
+                <div class="menu-item" onclick="location.href='clothmatcing.html'">matching</div>
+                <div class="menu-item" onclick="location.href='3_community_board.html'">Board</div>
+                <div class="menu-item" onclick="location.href='4_mypage.html'">MyPage</div>
+                <div class="menu-item" onclick="location.href='6_index.html'">Index</div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

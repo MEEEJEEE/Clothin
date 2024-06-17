@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Board</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #F9F0E1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+  h1 {
+    margin-bottom: 20px;
+  }
+  form {
+    width: 40%;
+    height: 630px;
+    max-width: 600px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  label {
+    font-weight: bold;
+  }
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  textarea {
+    height: 200px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #8970c9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button[type="submit"] {
+    background-color: #8970c9;
+  }
+  button[type="submit"]:hover,
+  button[type="button"]:hover {
+    background-color: #5443a7;
+  }
+  button + button {
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+  <form id="postForm">
+        <h1 style="text-align: center; margin-top: 0px; font-style: italic; font-size: 30px;">Add a post</h1>
+        <label for="title">제목:</label><br>
+        <input type="text" id="title" name="title" required><br>
+        
+        <label for="category">옷의 종류:</label><br>
+        <select id="category" name="category" required>
+            <option value="상의">상의</option>
+            <option value="하의">하의</option>
+            <option value="악세사리">악세사리</option>
+        </select><br>
+        
+        <label for="content">제품 설명:</label><br>
+        <textarea id="content" name="content" rows="4" cols="50" required></textarea><br>
+        <div style="text-align: right;">
+            <button type="submit">저장</button>
+            <button type="button" onclick="window.location.href='3_community_board.html'">목록으로 돌아가기</button>
+        </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('postForm');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // 기본 이벤트 동작 방지
+
+                // 사용자가 입력한 값 가져오기
+                const title = document.getElementById('title').value;
+                const category = document.getElementById('category').value;
+                const content = document.getElementById('content').value;
+
+                // 새로운 게시글 객체 생성
+                const newPost = {
+                    title: title,
+                    category: category,
+                    content: content
+                };
+
+                // 저장된 게시글 불러오기 (로컬 저장소에 저장)
+                let savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+                savedPosts.push(newPost); // 새로운 게시글을 배열에 추가
+                localStorage.setItem('posts', JSON.stringify(savedPosts));
+
+                // 목록으로 돌아가기
+                window.location.href = '3_community_board.html';
+            });
+        });
+    </script>
+</body>
+</html>

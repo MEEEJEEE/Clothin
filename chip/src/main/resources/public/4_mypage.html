@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F9F0E1;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-picture {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .details {
+            text-align: left;
+        }
+        .details h3 {
+            cursor: pointer;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: white; 
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .details h3:hover {
+            background-color: #d0e7ff;
+        }
+        .details-content {
+            display: none;
+            padding: 15px;
+            background-color: white; 
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .menu-box {
+            position: absolute;
+            right: 400px;
+            top: 150px;
+            background-color: white;
+            width: 70px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ada692;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item {
+            width: 100%;
+            height: 75px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            background-color: #ada692;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .menu-item:hover {
+            background-color: #e0e0e0;
+        }
+        .a {
+            margin: 40px;
+            border-top: gray 1px solid;
+            width: 150px;
+            position: relative;
+            left: -15px;
+        }
+        .back-button {
+            position: absolute;
+            top: 60px;
+            left: 460px;
+            background-color: #606060;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #5443a7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box profile-box">
+        <div class="menu-box">
+            <div class="menu-item" onclick="location.href='3_wardrobe(mainpage).html'">Home</div>
+            <div class="menu-item" onclick="location.href='clothmatcing.html'">matching</div>
+            <div class="menu-item" onclick="location.href='3_community_board.html'">Board</div>
+            <div class="menu-item" onclick="location.href='4_mypage.html'">MyPage</div>
+            <div class="menu-item" onclick="location.href='6_index.html'">Index</div>
+        </div>
+        <img src="img/profile.png" alt="프로필 사진" class="profile-picture">
+        <div class="profile-info">
+            <p><strong>닉네임:</strong> noonsong</p>
+        </div>
+    </div>
+
+    <div class="box info-box">
+        <div class="details">
+            <h3>이름: 눈송이</h3>
+            <h3 id="password" onmouseenter="showPassword()" onmouseleave="hidePassword()">비밀번호: ********</h3>
+            <h3 onclick="toggleDetails('body')">신체 정보</h3>
+            <div id="body-info" class="details-content">
+                <p>키: 170cm</p>
+                <p>몸무게: 60kg</p>
+            </div>
+            <h3>이메일: smwu@sookmyung.ac.kr</h3>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(section) {
+            var content = document.getElementById(section + '-info');
+            if (content.style.display === "none" || content.style.display === "") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        }
+
+        function showPassword() {
+            document.getElementById('password').textContent = '비밀번호: password';
+        }
+
+        function hidePassword() {
+            document.getElementById('password').textContent = '비밀번호: ********';
+        }
+    </script>
+</body>
+</html>
