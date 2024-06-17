@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>중고 의류 판매 게시글 작성</title>
+<title>Sales Board</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -70,14 +70,14 @@
         <label for="title">제목:</label><br>
         <input type="text" id="title" name="title" required><br>
         
-        <label for="category">글의 종류:</label><br>
+        <label for="category">옷의 종류:</label><br>
         <select id="category" name="category" required>
-            <option value="패션">패션</option>
-            <option value="코디질문">코디질문</option>
-            <option value="일상">일상</option>
+            <option value="상의">상의</option>
+            <option value="하의">하의</option>
+            <option value="악세사리">악세사리</option>
         </select><br>
         
-        <label for="content">내용:</label><br>
+        <label for="content">제품 설명:</label><br>
         <textarea id="content" name="content" rows="4" cols="50" required></textarea><br>
         <div style="text-align: right;">
             <button type="submit">저장</button>

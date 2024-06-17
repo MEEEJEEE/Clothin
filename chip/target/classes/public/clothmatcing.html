@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Recommendation</title>
+    <title>Cloth Matching</title>
     <style>
         body {
             background-color: #F9F0E1;
@@ -165,14 +165,14 @@
             return (
                 <div>
                     <div className="style-selector">
-                        <label>Select Style: </label>
+                        <label>선호하는 스타일을 선택하세요: </label>
                         <select value={style} onChange={(e) => setStyle(e.target.value)}>
                             {styles.map((styleOption) => (
                                 <option key={styleOption} value={styleOption}>{styleOption}</option>
                             ))}
                         </select>
                     </div>
-                    <button onClick={generateRecommendation}>Get Fashion Recommendation</button>
+                    <button onClick={generateRecommendation}>코디 추천</button>
                     <div className="recommendation">
                         {Object.keys(matchedClothes).map(category => (
                             <div key={category} className="clothing-item">
@@ -190,7 +190,7 @@
             return (
                 <div className="App">
                     <header className="App-header">
-                        <h1>Fashion Recommendation</h1>
+                        <h1>Fashion Matching Recommendation</h1>
                         <MatchClothes />
                     </header>
                 </div>

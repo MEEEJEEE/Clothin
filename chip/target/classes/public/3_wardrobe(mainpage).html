@@ -80,6 +80,30 @@
             margin-left: 70px;
         }
 
+        .add-button {
+            position: absolute;
+            right: 675px;
+            bottom: 600px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ada692;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            line-height: 1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        
+
+        .add-button:hover {
+            background-color: #e0e0e0;
+        }
+
     </style>
 </head>
 <body>
@@ -99,6 +123,7 @@
                 <div class="menu-item" onclick="location.href='4_mypage.html'">MyPage</div>
                 <div class="menu-item" onclick="location.href='6_index.html'">Index</div>
             </div>
+            <div class="add-button" onclick="location.href='5_cloth_addition.html'">+</div>
         </main>
     </div>
 </body>
